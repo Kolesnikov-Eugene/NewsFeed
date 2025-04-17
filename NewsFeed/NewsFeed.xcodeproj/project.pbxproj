@@ -33,7 +33,7 @@
 		441277D72DB1269700F4F2C6 /* Exceptions for "NewsFeed" folder in "NewsFeed" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				Application/Info.plist,
 			);
 			target = 441277AE2DB1269600F4F2C6 /* NewsFeed */;
 		};
@@ -291,7 +291,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NU9QMJ4324;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = NewsFeed/Info.plist;
+				INFOPLIST_FILE = NewsFeed/Application/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -323,7 +323,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NU9QMJ4324;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = NewsFeed/Info.plist;
+				INFOPLIST_FILE = NewsFeed/Application/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

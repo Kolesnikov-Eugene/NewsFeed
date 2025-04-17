@@ -10,7 +10,10 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-
+    
+    // MARK: - private properties
+    private var newsFeedCoordinator: Coordinator?
+    
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -18,10 +21,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
-            let vc = NewsFeedViewController()
-            window.rootViewController = vc
-            window.makeKeyAndVisible()
+            let appFactory = NewsFeedFactory()
+            let appCoordinator = NewsFeedAppCoordinator(window: window, newsFeedFactory: appFactory)
             self.window = window
+            self.newsFeedCoordinator = appCoordinator
+            newsFeedCoordinator?.start()
         }
     }
 
