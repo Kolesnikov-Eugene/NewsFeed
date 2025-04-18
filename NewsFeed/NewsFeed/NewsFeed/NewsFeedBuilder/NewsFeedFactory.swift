@@ -16,9 +16,10 @@ protocol INewsFeedFactory: AnyObject {
 final class NewsFeedFactory: INewsFeedFactory {
     func makeNewsFeedViewController() -> NewsFeedViewController {
         let networkClient = NetworkClient()
+        let imageLoader: ImageLoading = ImageLoader()
         let newsServiceRepository = NewsServiceRepositoryImpl(networkClient: networkClient)
         let newsService = NewsService(newsServiceRepository: newsServiceRepository)
-        let viewModel = NewsFeedViewModel(newsService: newsService)
+        let viewModel = NewsFeedViewModel(newsService: newsService, imageLoader: imageLoader)
         return NewsFeedViewController(viewModel: viewModel)
     }
 }

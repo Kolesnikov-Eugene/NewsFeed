@@ -5,7 +5,7 @@
 //  Created by Eugene Kolesnikov on 17.04.2025.
 //
 
-import Foundation
+import UIKit
 import Combine
 
 protocol INewsFeedViewModel: AnyObject {
@@ -23,11 +23,14 @@ final class NewsFeedViewModel: INewsFeedViewModel {
     
     // MARK: - private properties
     private let newsService: INewsService
+    private let imageLoader: ImageLoading
     
     init(
-        newsService: INewsService
+        newsService: INewsService,
+        imageLoader: ImageLoading
     ) {
         self.newsService = newsService
+        self.imageLoader = imageLoader
         loadNews()
     }
     
@@ -36,18 +39,30 @@ final class NewsFeedViewModel: INewsFeedViewModel {
         Task {
             do {
                 let news = try await newsService.loadNews(for: 1)
-                news.forEach { item in
-                    newsFeedItems.append(
-                        .mainNewsItem(MainNewsItem(
-                            title: item.title,
-                            description: item.description,
-                            imageURL: URL(string: item.titleImageUrl))
-                        )
-                    )
-                }
+                appendNewsToFeed(news)
             } catch {
                 print(error)
             }
         }
+    }
+    
+    private func appendNewsToFeed(_ news: [NewsItem]) {
+        news.forEach { item in
+            newsFeedItems.append(
+                .mainNewsItem(MainNewsItem(
+                    title: item.title,
+                    description: item.description,
+                    imageURL: URL(string: item.titleImageUrl),
+                    fullNewsURL: URL(string: item.fullUrl))
+                )
+            )
+        }
+    }
+}
+
+// MARK: - ImageLoading
+extension NewsFeedViewModel: ImageLoading {
+    func loadImage(from url: URL) async throws -> UIImage {
+        try await imageLoader.loadImage(from: url)
     }
 }

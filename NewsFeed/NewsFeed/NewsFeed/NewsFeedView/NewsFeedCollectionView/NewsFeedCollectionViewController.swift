@@ -22,6 +22,7 @@ struct MainNewsItem: Hashable {
     let title: String
     let description: String
     let imageURL: URL?
+    let fullNewsURL: URL?
 }
 
 final class NewsFeedCollectionViewController: UICollectionViewController {
@@ -101,7 +102,8 @@ final class NewsFeedCollectionViewController: UICollectionViewController {
                 }
                 switch itemIdentifier {
                 case .mainNewsItem(let newsItem):
-                    cell.configure(with: newsItem)
+                    
+                    cell.configure(with: newsItem, imageLoader: self.viewModel as? ImageLoading)
                 }
                 return cell
             })
