@@ -31,6 +31,7 @@ final class NewsFeedViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .systemBackground
+        navigationItem.title = "News Feed"
     }
     
     override func loadView() {

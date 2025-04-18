@@ -20,6 +20,8 @@ enum NewsFeedItem: Hashable, Equatable {
 
 struct MainNewsItem: Hashable {
     let title: String
+    let description: String
+    let imageURL: URL?
 }
 
 final class NewsFeedCollectionViewController: UICollectionViewController {
@@ -60,7 +62,7 @@ final class NewsFeedCollectionViewController: UICollectionViewController {
         
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
-            heightDimension: .fractionalHeight(0.25)
+            heightDimension: .fractionalHeight(0.2)
         )
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         

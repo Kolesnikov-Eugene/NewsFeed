@@ -11,6 +11,7 @@ import Combine
 protocol INewsFeedViewModel: AnyObject {
     var newsFeedItemsPublisher: AnyPublisher<[NewsFeedItem], Never> { get }
     var newsFeedItems: [NewsFeedItem] { get set }
+    func loadNews()
 }
 
 final class NewsFeedViewModel: INewsFeedViewModel {
@@ -18,8 +19,35 @@ final class NewsFeedViewModel: INewsFeedViewModel {
         $newsFeedItems.eraseToAnyPublisher()
     }
     
-    @Published var newsFeedItems: [NewsFeedItem] = [
-        .mainNewsItem(MainNewsItem(title: "Super cool title")),
-        .mainNewsItem(MainNewsItem(title: "Another super cool title"))
-    ]
+    @Published var newsFeedItems: [NewsFeedItem] = []
+    
+    // MARK: - private properties
+    private let newsService: INewsService
+    
+    init(
+        newsService: INewsService
+    ) {
+        self.newsService = newsService
+        loadNews()
+    }
+    
+    // MARK: - public methods
+    func loadNews() {
+        Task {
+            do {
+                let news = try await newsService.loadNews(for: 1)
+                news.forEach { item in
+                    newsFeedItems.append(
+                        .mainNewsItem(MainNewsItem(
+                            title: item.title,
+                            description: item.description,
+                            imageURL: URL(string: item.titleImageUrl))
+                        )
+                    )
+                }
+            } catch {
+                print(error)
+            }
+        }
+    }
 }
