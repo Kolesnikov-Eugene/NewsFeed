@@ -57,7 +57,7 @@ final class NewsFeedViewModel: INewsFeedViewModel {
                 totalItems = total
                 currentPage += 1
             } catch {
-                print(error)
+                coordinator.showAlert(with: error.localizedDescription)
             }
             
             isLoading = false

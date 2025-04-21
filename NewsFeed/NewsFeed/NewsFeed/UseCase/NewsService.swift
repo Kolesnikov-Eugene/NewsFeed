@@ -21,7 +21,10 @@ final class NewsService: INewsService {
         self.newsServiceRepository = newsServiceRepository
     }
     
-    func loadNews(for page: Int, pageSize: Int) async throws -> ([NewsItem], Int) {
+    func loadNews(
+        for page: Int,
+        pageSize: Int
+    ) async throws -> ([NewsItem], Int) {
         let (newsItems, total) =  try await newsServiceRepository.loadNews(for: page, pageSize: pageSize)
         return (newsItems, total)
     }

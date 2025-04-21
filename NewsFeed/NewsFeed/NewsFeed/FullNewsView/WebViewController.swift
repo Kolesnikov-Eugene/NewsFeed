@@ -20,24 +20,21 @@ final class WebViewController: UIViewController {
         button.target = self
         button.action = #selector(backButtonTapped)
         button.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        button.tintColor = UIColor.black
+        button.tintColor = UIColor(resource: .fontMain)
         
         return button
     }()
     private lazy var webView: WKWebView = {
         let view = WKWebView()
-        
+        view.backgroundColor = .systemBackground
         view.translatesAutoresizingMaskIntoConstraints = false
-        
         return view
     }()
     private lazy var progressView: UIProgressView = {
         let view = UIProgressView()
-        
         view.progressTintColor = UIColor.black
         view.trackTintColor = UIColor.lightGray
         view.translatesAutoresizingMaskIntoConstraints = false
-        
         return view
     }()
     private var viewModel: IWebViewModel
@@ -63,7 +60,7 @@ final class WebViewController: UIViewController {
     
     // MARK: - Private methods
     private func setupUI() {
-        view.backgroundColor = UIColor.white
+        view.backgroundColor = UIColor.systemBackground
         configureNavBar()
         addSubviews()
         applyConstraints()

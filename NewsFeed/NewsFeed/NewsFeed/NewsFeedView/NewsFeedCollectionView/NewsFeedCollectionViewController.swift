@@ -10,22 +10,6 @@ import Combine
 
 private let reuseIdentifier = "NewsFeedCell"
 
-enum NewsFeedSection: Hashable {
-    case main
-}
-
-enum NewsFeedItem: Hashable, Equatable {
-    case mainNewsItem(MainNewsItem)
-}
-
-struct MainNewsItem: Hashable {
-    let id = UUID()
-    let title: String
-    let description: String
-    let imageURL: URL?
-    let fullNewsURL: URL?
-}
-
 final class NewsFeedCollectionViewController: UICollectionViewController {
     
     private let viewModel: INewsFeedViewModel
@@ -55,23 +39,34 @@ final class NewsFeedCollectionViewController: UICollectionViewController {
     
     // MARK: - layout
     static func createLayout() -> UICollectionViewLayout {
-        let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0),
-            heightDimension: .fractionalHeight(1.0)
-        )
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = .init(top: 4, leading: 4, bottom: 4, trailing: 4)
-        
-        let groupSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1),
-            heightDimension: .fractionalHeight(0.2)
-        )
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        
-        let section = NSCollectionLayoutSection(group: group)
-        let layout = UICollectionViewCompositionalLayout(section: section)
-        section.contentInsets = .init(top: 20, leading: 20, bottom: 20, trailing: 20)
-        return layout
+        return UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
+            let isRegularWidth = layoutEnvironment.traitCollection.horizontalSizeClass == .regular
+            let columns = isRegularWidth ? 2 : 1 // iPad = 2, iPhone = 1
+            let cellWidth = columns == 1 ? 1.0 : 0.5 // 1.0 - 1 cell for iPhone, 0.5 - 2 cells in a row for iPad
+            
+            let itemSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(cellWidth),
+                heightDimension: .fractionalHeight(1.0)
+            )
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+            item.contentInsets = .init(top: 8, leading: 8, bottom: 8, trailing: 8)
+            
+            let groupHeight: NSCollectionLayoutDimension = .absolute(isRegularWidth ? 180 : 150)
+            let groupSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: groupHeight
+            )
+            
+            let group = NSCollectionLayoutGroup.horizontal(
+                layoutSize: groupSize,
+                repeatingSubitem: item,
+                count: columns
+            )
+            
+            let section = NSCollectionLayoutSection(group: group)
+            section.contentInsets = .init(top: 10, leading: 10, bottom: 10, trailing: 10)
+            return section
+        }
     }
     
     // MARK: - private methods
@@ -103,7 +98,6 @@ final class NewsFeedCollectionViewController: UICollectionViewController {
                 }
                 switch itemIdentifier {
                 case .mainNewsItem(let newsItem):
-                    
                     cell.configure(with: newsItem, imageLoader: self.viewModel as? ImageLoading)
                 }
                 return cell
