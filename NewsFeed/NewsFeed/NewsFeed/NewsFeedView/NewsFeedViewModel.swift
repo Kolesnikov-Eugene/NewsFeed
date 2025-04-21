@@ -11,7 +11,9 @@ import Combine
 
 protocol INewsFeedViewModel: AnyObject {
     var newsFeedItemsPublisher: AnyPublisher<[NewsFeedItem], Never> { get }
+    var loadingError: AnyPublisher<String?, Never> { get }
     var newsFeedItems: [NewsFeedItem] { get set }
+    func viewDidLoad()
     func loadNews()
     func presentNews(for url: URL)
 }
@@ -20,8 +22,12 @@ final class NewsFeedViewModel: INewsFeedViewModel {
     var newsFeedItemsPublisher: AnyPublisher<[NewsFeedItem], Never> {
         $newsFeedItems.eraseToAnyPublisher()
     }
+    var loadingError: AnyPublisher<String?, Never> {
+        $loadFailedWithError.eraseToAnyPublisher()
+    }
     
     @Published var newsFeedItems: [NewsFeedItem] = []
+    @Published var loadFailedWithError: String?
     
     // MARK: - private properties
     private let newsService: INewsService
@@ -43,10 +49,13 @@ final class NewsFeedViewModel: INewsFeedViewModel {
         self.newsService = newsService
         self.imageLoader = imageLoader
         self.coordinator = coordinator
-        loadNews()
     }
     
     // MARK: - public methods
+    func viewDidLoad() {
+        loadNews()
+    }
+    
     func loadNews() {
         guard !isLoading, newsFeedItems.count < totalItems else { return }
         
@@ -57,7 +66,7 @@ final class NewsFeedViewModel: INewsFeedViewModel {
                 totalItems = total
                 currentPage += 1
             } catch {
-                coordinator.showAlert(with: error.localizedDescription)
+                loadFailedWithError = error.localizedDescription
             }
             
             isLoading = false

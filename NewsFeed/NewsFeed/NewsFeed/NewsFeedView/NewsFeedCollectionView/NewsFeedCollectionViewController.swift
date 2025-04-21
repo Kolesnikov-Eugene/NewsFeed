@@ -12,10 +12,12 @@ private let reuseIdentifier = "NewsFeedCell"
 
 final class NewsFeedCollectionViewController: UICollectionViewController {
     
+    // MARK: - pivate properties
     private let viewModel: INewsFeedViewModel
     private var dataSource: UICollectionViewDiffableDataSource<NewsFeedSection, NewsFeedItem>!
     private var cancellables: Set<AnyCancellable> = []
     
+    // MARK: - init
     init(
         viewModel: INewsFeedViewModel
     ) {

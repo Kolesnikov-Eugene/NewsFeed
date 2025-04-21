@@ -8,6 +8,8 @@
 import UIKit
 
 final class NewsFeedCollectionViewCell: UICollectionViewCell {
+    
+    // MARK: - UI elements
     private lazy var newsImageView: UIImageView = {
         let view = UIImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -37,6 +39,7 @@ final class NewsFeedCollectionViewCell: UICollectionViewCell {
         return stack
     }()
     
+    // MARK: - init
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -46,6 +49,7 @@ final class NewsFeedCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - public methods
     func configure(with news: MainNewsItem, imageLoader: ImageLoading?) {
         newsLabel.text = news.title
         summaryLabel.text = news.description // Optional: only visible on iPad
@@ -60,11 +64,12 @@ final class NewsFeedCollectionViewCell: UICollectionViewCell {
                     self?.newsImageView.image = image
                 }
             } catch {
-                print("Image load failed: \(error)")
+                self?.newsImageView.image = UIImage(systemName: "photo") // stub if loading fails
             }
         }
     }
     
+    // MARK: - private methods
     private func setupUI() {
         backgroundColor = UIColor(resource: .cellBackground)
         layer.cornerRadius = 8
@@ -74,12 +79,14 @@ final class NewsFeedCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(textStackView)
         
         NSLayoutConstraint.activate([
+            // MARK: - newsImageView constraints
             newsImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
             newsImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             newsImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
             newsImageView.widthAnchor.constraint(equalToConstant: 100),
             newsImageView.heightAnchor.constraint(greaterThanOrEqualToConstant: 100),
             
+            // MARK: - textStackView constraints
             textStackView.leadingAnchor.constraint(equalTo: newsImageView.trailingAnchor, constant: 16),
             textStackView.topAnchor.constraint(equalTo: newsImageView.topAnchor),
             textStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),

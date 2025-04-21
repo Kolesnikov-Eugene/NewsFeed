@@ -9,10 +9,8 @@ import Foundation
 import Combine
 
 protocol IWebViewModel: AnyObject {
-    var progressValue: Float { get set }
-    var progressPublisher: Published<Float>.Publisher { get }
-    var shouldHideProgress: Bool { get set }
-    var progressStatePublisher: Published<Bool>.Publisher { get }
+    var progressPublisher: AnyPublisher<Float, Never> { get }
+    var progressStatePublisher: AnyPublisher<Bool, Never> { get }
     func viewDidLoad()
     func didUpdateProgressValue(_ newValue: Double)
 }
@@ -21,8 +19,8 @@ final class WebViewModel: IWebViewModel {
     // MARK: - Public properties
     @Published var progressValue: Float = 0
     @Published var shouldHideProgress: Bool = false
-    var progressPublisher: Published<Float>.Publisher { $progressValue }
-    var progressStatePublisher: Published<Bool>.Publisher { $shouldHideProgress }
+    var progressPublisher: AnyPublisher<Float, Never>  { $progressValue.eraseToAnyPublisher() }
+    var progressStatePublisher: AnyPublisher<Bool, Never> { $shouldHideProgress.eraseToAnyPublisher() }
     
     init() {}
     

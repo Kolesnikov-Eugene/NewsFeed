@@ -6,13 +6,13 @@
 //
 
 import UIKit
+import Combine
 
 final class NewsFeedViewController: UIViewController {
     
-    // MARK: - public properties
-    
     // MARK: - private properties
     private var viewModel: INewsFeedViewModel
+    private var bag = Set<AnyCancellable>()
     
     // MARK: - init
     init(
@@ -32,16 +32,27 @@ final class NewsFeedViewController: UIViewController {
         
         view.backgroundColor = .systemBackground
         navigationItem.title = "News Feed"
+        
+        viewModel.viewDidLoad()
     }
     
     override func loadView() {
         super.loadView()
         self.view = NewsFeedView(frame: .zero, viewModel: viewModel)
+        
+        bindToViewModel()
     }
     
-    // MARK: - public methods
-    
     // MARK: - private methods
-
-    
+    private func bindToViewModel() {
+        viewModel.loadingError.receive(on: DispatchQueue.main)
+            .dropFirst()
+            .sink { [weak self] error in
+                guard let self = self else { return }
+                AlertPresenter.showError(in: self) {
+                    self.viewModel.loadNews()
+                }
+            }
+            .store(in: &bag)
+    }
 }
