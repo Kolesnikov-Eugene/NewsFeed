@@ -15,16 +15,13 @@ final class NewsFeedAppCoordinator: Coordinator {
     // MARK: - private properties
     private let window: UIWindow
     private var childCoordinators: [Coordinator?] = []
-    private let newsFeedFactory: INewsFeedFactory
     private let navigationController: UINavigationController!
     
     // MARK: - lifecycle
     init(
-        window: UIWindow,
-        newsFeedFactory: INewsFeedFactory
+        window: UIWindow
     ) {
         self.window = window
-        self.newsFeedFactory = newsFeedFactory
         self.navigationController = UINavigationController()
     }
     
@@ -37,6 +34,7 @@ final class NewsFeedAppCoordinator: Coordinator {
     
     //MARK: - private methods
     private func startFlows() {
+        let newsFeedFactory: INewsFeedFactory = NewsFeedFactory()
         let newsFeedCoordinator = NewsFeedCoordinator(
             navigationController: navigationController,
             newsFeedFactory: newsFeedFactory

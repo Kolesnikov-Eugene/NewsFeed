@@ -71,7 +71,9 @@ struct NetworkClient: INetworkClient {
             return nil
         }
         
-        let urlRequest = URLRequest(url: endpoint)
+        var urlRequest = URLRequest(url: endpoint)
+        urlRequest.httpMethod = request.httpMethod.rawValue
+        
         return urlRequest
     }
     

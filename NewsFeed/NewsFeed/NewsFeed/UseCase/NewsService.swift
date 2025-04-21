@@ -8,7 +8,7 @@
 import Foundation
 
 protocol INewsService: AnyObject {
-    func loadNews(for page: Int) async throws -> [NewsItem]
+    func loadNews(for page: Int, pageSize: Int) async throws -> ([NewsItem], Int)
 }
 
 final class NewsService: INewsService {
@@ -21,8 +21,8 @@ final class NewsService: INewsService {
         self.newsServiceRepository = newsServiceRepository
     }
     
-    func loadNews(for page: Int) async throws -> [NewsItem] {
-        let newsItems =  try await newsServiceRepository.loadNews(for: page)
-        return newsItems
+    func loadNews(for page: Int, pageSize: Int) async throws -> ([NewsItem], Int) {
+        let (newsItems, total) =  try await newsServiceRepository.loadNews(for: page, pageSize: pageSize)
+        return (newsItems, total)
     }
 }

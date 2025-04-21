@@ -19,6 +19,7 @@ enum NewsFeedItem: Hashable, Equatable {
 }
 
 struct MainNewsItem: Hashable {
+    let id = UUID()
     let title: String
     let description: String
     let imageURL: URL?
@@ -115,5 +116,30 @@ final class NewsFeedCollectionViewController: UICollectionViewController {
         snapshot.appendSections([.main])
         snapshot.appendItems(viewModel.newsFeedItems)
         dataSource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let visibleHeight = scrollView.frame.size.height
+        
+        if offsetY > contentHeight - visibleHeight * 1.5 {
+            viewModel.loadNews()
+        }
+    }
+    
+    override func collectionView(
+        _ collectionView: UICollectionView,
+        didSelectItemAt indexPath: IndexPath
+    ) {
+        var url: URL?
+        let item = viewModel.newsFeedItems[indexPath.row]
+        switch item {
+        case .mainNewsItem(let newsItem):
+            url = newsItem.fullNewsURL
+        }
+
+        guard let url = url else { return }
+        viewModel.presentNews(for: url)
     }
 }

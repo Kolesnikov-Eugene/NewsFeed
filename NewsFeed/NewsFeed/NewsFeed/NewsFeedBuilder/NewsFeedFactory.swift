@@ -9,17 +9,30 @@ import Foundation
 
 
 protocol INewsFeedFactory: AnyObject {
-    func makeNewsFeedViewController() -> NewsFeedViewController
+    func makeNewsFeedViewController(coordinator: INewsFeedCoordinator) -> NewsFeedViewController
 }
 
 
 final class NewsFeedFactory: INewsFeedFactory {
-    func makeNewsFeedViewController() -> NewsFeedViewController {
+    
+//    private let coordinator: INewsFeedCoordinator
+//    
+//    init(
+//        coordinator: INewsFeedCoordinator
+//    ) {
+//        self.coordinator = coordinator
+//    }
+    
+    func makeNewsFeedViewController(coordinator: INewsFeedCoordinator) -> NewsFeedViewController {
         let networkClient = NetworkClient()
         let imageLoader: ImageLoading = ImageLoader()
         let newsServiceRepository = NewsServiceRepositoryImpl(networkClient: networkClient)
         let newsService = NewsService(newsServiceRepository: newsServiceRepository)
-        let viewModel = NewsFeedViewModel(newsService: newsService, imageLoader: imageLoader)
+        let viewModel = NewsFeedViewModel(
+            newsService: newsService,
+            imageLoader: imageLoader,
+            coordinator: coordinator
+        )
         return NewsFeedViewController(viewModel: viewModel)
     }
 }

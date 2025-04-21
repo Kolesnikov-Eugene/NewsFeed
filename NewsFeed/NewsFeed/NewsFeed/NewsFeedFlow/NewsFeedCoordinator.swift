@@ -9,7 +9,7 @@ import UIKit
 
 
 protocol INewsFeedCoordinator: Coordinator {
-//    func start()
+    func startNews(for url: URL)
 }
 
 final class NewsFeedCoordinator: INewsFeedCoordinator {
@@ -28,7 +28,13 @@ final class NewsFeedCoordinator: INewsFeedCoordinator {
     }
     
     func start() {
-        let newsFeedViewController = newsFeedFactory.makeNewsFeedViewController()
+        let newsFeedViewController = newsFeedFactory.makeNewsFeedViewController(coordinator: self)
         navigationController.pushViewController(newsFeedViewController, animated: false)
+    }
+    
+    func startNews(for url: URL) {
+        let webViewModel = WebViewModel()
+        let vc = WebViewController(viewModel: webViewModel, url: url)
+        navigationController.pushViewController(vc, animated: true)
     }
 }

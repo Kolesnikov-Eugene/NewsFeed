@@ -21,8 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
-            let appFactory = NewsFeedFactory()
-            let appCoordinator = NewsFeedAppCoordinator(window: window, newsFeedFactory: appFactory)
+            let appCoordinator = NewsFeedAppCoordinator(window: window)
             self.window = window
             self.newsFeedCoordinator = appCoordinator
             newsFeedCoordinator?.start()

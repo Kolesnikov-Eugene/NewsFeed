@@ -10,7 +10,6 @@ import UIKit
 final class NewsFeedCollectionViewCell: UICollectionViewCell {
     private lazy var newsImageView: UIImageView = {
         let view = UIImageView()
-//        view.backgroundColor = .yellow
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()

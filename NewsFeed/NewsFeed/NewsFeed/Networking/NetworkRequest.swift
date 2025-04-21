@@ -28,8 +28,9 @@ extension NetworkRequest {
 
 struct NewsFeedRequest: NetworkRequest {
     let page: Int
+    let pageSize: Int
     var endpoint: URL? {
-        URL(string: "https://webapi.autodoc.ru/api/news/\(page)/10")
+        URL(string: "https://webapi.autodoc.ru/api/news/\(page)/\(pageSize)")
     }
     var httpMethod: HttpMethod { .get }
 }
