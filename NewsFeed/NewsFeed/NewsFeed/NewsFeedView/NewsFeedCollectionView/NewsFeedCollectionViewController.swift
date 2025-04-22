@@ -9,13 +9,15 @@ import UIKit
 import Combine
 
 private let reuseIdentifier = "NewsFeedCell"
+private let iPhoneGroupSize = 1.0 / 5.0
+private let iPadGroupSize = 1.0 / 6.0
 
 final class NewsFeedCollectionViewController: UICollectionViewController {
     
     // MARK: - pivate properties
     private let viewModel: INewsFeedViewModel
     private var dataSource: UICollectionViewDiffableDataSource<NewsFeedSection, NewsFeedItem>!
-    private var cancellables: Set<AnyCancellable> = []
+    private var bag = Set<AnyCancellable>()
     
     // MARK: - init
     init(
@@ -53,7 +55,7 @@ final class NewsFeedCollectionViewController: UICollectionViewController {
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
             item.contentInsets = .init(top: 8, leading: 8, bottom: 8, trailing: 8)
             
-            let groupHeight: NSCollectionLayoutDimension = .absolute(isRegularWidth ? 180 : 150)
+            let groupHeight: NSCollectionLayoutDimension = .fractionalHeight(isRegularWidth ? iPadGroupSize : iPhoneGroupSize)
             let groupSize = NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
                 heightDimension: groupHeight
@@ -78,7 +80,7 @@ final class NewsFeedCollectionViewController: UICollectionViewController {
             .sink(receiveValue: { [weak self] newsFeedItems in
                 self?.updateSnapshot()
             })
-            .store(in: &cancellables)
+            .store(in: &bag)
     }
     
     private func configureCollectionView() {
@@ -120,7 +122,9 @@ final class NewsFeedCollectionViewController: UICollectionViewController {
         let visibleHeight = scrollView.frame.size.height
         
         if offsetY > contentHeight - visibleHeight * 1.5 {
-            viewModel.loadNews()
+            Task { [weak self] in
+                await self?.viewModel.loadNews()
+            }
         }
     }
     

@@ -28,6 +28,7 @@ final class NewsFeedView: UIView {
     
     private func setupView() {
         addSubview(newsFeedCollectionViewController.collectionView)
+        
         if let newsFeedCollectionView = newsFeedCollectionViewController.collectionView {
             NSLayoutConstraint.activate([
                 newsFeedCollectionView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),

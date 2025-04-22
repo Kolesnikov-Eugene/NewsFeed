@@ -10,7 +10,6 @@ import UIKit
 
 protocol INewsFeedCoordinator: Coordinator {
     func startNews(for url: URL)
-    func showAlert(with message: String)
 }
 
 final class NewsFeedCoordinator: INewsFeedCoordinator {
@@ -37,9 +36,5 @@ final class NewsFeedCoordinator: INewsFeedCoordinator {
         let webViewModel = WebViewModel()
         let vc = WebViewController(viewModel: webViewModel, url: url)
         navigationController.pushViewController(vc, animated: true)
-    }
-    
-    func showAlert(with message: String) {
-        print(message)
     }
 }

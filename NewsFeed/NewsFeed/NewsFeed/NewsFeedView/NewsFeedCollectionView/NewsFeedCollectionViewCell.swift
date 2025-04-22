@@ -84,7 +84,6 @@ final class NewsFeedCollectionViewCell: UICollectionViewCell {
             newsImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             newsImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
             newsImageView.widthAnchor.constraint(equalToConstant: 100),
-            newsImageView.heightAnchor.constraint(greaterThanOrEqualToConstant: 100),
             
             // MARK: - textStackView constraints
             textStackView.leadingAnchor.constraint(equalTo: newsImageView.trailingAnchor, constant: 16),

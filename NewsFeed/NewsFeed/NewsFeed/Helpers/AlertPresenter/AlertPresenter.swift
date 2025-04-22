@@ -7,14 +7,23 @@
 
 import UIKit
 
+struct AlertModel {
+    let title: String
+    let message: String
+}
+
 final class AlertPresenter {
 
     private init() {}
 
-    static func showError(in viewController: UIViewController, completion: @escaping () -> Void) {
+    static func showError(
+        in viewController: UIViewController,
+        with model: AlertModel,
+        completion: @escaping () -> Void
+    ) -> Void {
         let alert = UIAlertController(
-            title: "Error",
-            message: "Try again",
+            title: model.title,
+            message: model.message,
             preferredStyle: .alert
         )
 

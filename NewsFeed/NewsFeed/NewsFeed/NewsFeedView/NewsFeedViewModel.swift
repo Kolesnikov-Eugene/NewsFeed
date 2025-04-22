@@ -12,13 +12,18 @@ import Combine
 protocol INewsFeedViewModel: AnyObject {
     var newsFeedItemsPublisher: AnyPublisher<[NewsFeedItem], Never> { get }
     var loadingError: AnyPublisher<String?, Never> { get }
-    var newsFeedItems: [NewsFeedItem] { get set }
-    func viewDidLoad()
-    func loadNews()
+    var loadingPublisher: AnyPublisher<Bool, Never> { get }
+    var newsFeedItems: [NewsFeedItem] { get }
+    func loadNews() async
     func presentNews(for url: URL)
 }
 
 final class NewsFeedViewModel: INewsFeedViewModel {
+    
+    // MARK: - public properties
+    var loadingPublisher: AnyPublisher<Bool, Never> {
+        $isLoading.eraseToAnyPublisher()
+    }
     var newsFeedItemsPublisher: AnyPublisher<[NewsFeedItem], Never> {
         $newsFeedItems.eraseToAnyPublisher()
     }
@@ -26,8 +31,9 @@ final class NewsFeedViewModel: INewsFeedViewModel {
         $loadFailedWithError.eraseToAnyPublisher()
     }
     
-    @Published var newsFeedItems: [NewsFeedItem] = []
-    @Published var loadFailedWithError: String?
+    @Published private(set) var newsFeedItems: [NewsFeedItem] = []
+    @Published private(set) var loadFailedWithError: String?
+    @Published private(set) var isLoading: Bool = false
     
     // MARK: - private properties
     private let newsService: INewsService
@@ -37,7 +43,6 @@ final class NewsFeedViewModel: INewsFeedViewModel {
     // MARK: - network call props
     private var currentPage = 1
     private let pageSize = 10
-    private var isLoading = false
     private var totalItems = Int.max
     
     
@@ -52,24 +57,28 @@ final class NewsFeedViewModel: INewsFeedViewModel {
     }
     
     // MARK: - public methods
-    func viewDidLoad() {
-        loadNews()
-    }
-    
-    func loadNews() {
+    func loadNews() async {
         guard !isLoading, newsFeedItems.count < totalItems else { return }
         
-        Task {
-            do {
-                let (news, total) = try await newsService.loadNews(for: currentPage, pageSize: pageSize)
-                appendNewsToFeed(news)
-                totalItems = total
-                currentPage += 1
-            } catch {
-                loadFailedWithError = error.localizedDescription
+        await MainActor.run {
+            self.isLoading = true
+        }
+        
+        defer {
+            Task { @MainActor in
+                self.isLoading = false
             }
-            
-            isLoading = false
+        }
+        
+        do {
+            let (news, total) = try await newsService.loadNews(for: currentPage, pageSize: pageSize)
+            appendNewsToFeed(news)
+            totalItems = total
+            currentPage += 1
+        } catch {
+            await MainActor.run {
+                self.loadFailedWithError = error.localizedDescription
+            }
         }
     }
     

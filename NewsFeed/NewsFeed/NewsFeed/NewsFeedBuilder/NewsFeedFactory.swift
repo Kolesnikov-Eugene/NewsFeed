@@ -15,14 +15,6 @@ protocol INewsFeedFactory: AnyObject {
 
 final class NewsFeedFactory: INewsFeedFactory {
     
-//    private let coordinator: INewsFeedCoordinator
-//    
-//    init(
-//        coordinator: INewsFeedCoordinator
-//    ) {
-//        self.coordinator = coordinator
-//    }
-    
     func makeNewsFeedViewController(coordinator: INewsFeedCoordinator) -> NewsFeedViewController {
         let networkClient = NetworkClient()
         let imageLoader: ImageLoading = ImageLoader()

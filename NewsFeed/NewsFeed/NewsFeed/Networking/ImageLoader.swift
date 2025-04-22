@@ -13,7 +13,7 @@ protocol ImageLoading {
 
 final class ImageLoader: ImageLoading {
     
-    private var cahce = NSCache<NSURL, UIImage>()
+    private var cache = NSCache<NSURL, UIImage>()
     private let session: URLSession
     
     init(
@@ -23,14 +23,14 @@ final class ImageLoader: ImageLoading {
     }
     
     func loadImage(from url: URL) async throws -> UIImage {
-        if let cached = cahce.object(forKey: url as NSURL) {
+        if let cached = cache.object(forKey: url as NSURL) {
             return cached
         }
         let (data, _) = try await session.data(from: url)
         guard let image = UIImage(data: data) else {
             throw URLError(.cannotDecodeContentData)
         }
-        cahce.setObject(image, forKey: url as NSURL)
+        cache.setObject(image, forKey: url as NSURL)
         return image
     }
 }

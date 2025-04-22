@@ -31,11 +31,6 @@ final class MockImageLoader: ImageLoading {
 final class MockCoordinator: INewsFeedCoordinator {
     var didStartNews = false
     
-    
-    func showAlert(with message: String) {
-        print("")
-    }
-    
     func start() {
         print("")
     }

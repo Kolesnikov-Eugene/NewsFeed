@@ -38,7 +38,7 @@ final class WebViewController: UIViewController {
         return view
     }()
     private var viewModel: IWebViewModel
-    private var subscribes = [AnyCancellable]()
+    private var bag = Set<AnyCancellable>()
     
     init(
         viewModel: IWebViewModel,
@@ -98,7 +98,7 @@ final class WebViewController: UIViewController {
                 self.setProgressValue(newValue)
                 self.viewModel.didUpdateProgressValue(self.webView.estimatedProgress)
                 
-            }.store(in: &subscribes)
+            }.store(in: &bag)
         
         viewModel.progressStatePublisher.receive(on: DispatchQueue.main)
             .sink { [weak self] shouldHide in
@@ -107,7 +107,7 @@ final class WebViewController: UIViewController {
                 if shouldHide {
                     self.setProgressHidden(shouldHide)
                 }
-            }.store(in: &subscribes)
+            }.store(in: &bag)
     }
     
     private func setProgressValue (_ newValue: Float) {
